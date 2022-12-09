@@ -2,6 +2,7 @@ from aiogram import Dispatcher, Bot, executor, types
 from config.settings import SETTINGS
 from database.database import DATABASE
 from aiogram.types import InputFile
+from buttons import urlkb
 
 bot = Bot(token=SETTINGS['token'])
 
@@ -13,7 +14,7 @@ async def start_command(message: types.Message):
     name = message.from_user.first_name
     DATABASE.correct_user(id_user=user_id, first_name=name)
     photo = InputFile("images/start_image.jpg")
-    await message.answer("Приветствую, {}\nКоманда /help поможет вам :-)".format(name))
+    await message.answer("Привет!", reply_markup=urlkb)
     await bot.send_photo(chat_id=message.chat.id, photo=photo)
 
 
@@ -25,10 +26,16 @@ async def help_command(message: types.Message):
     """
     await message.answer(help_str)
 
-@dp.message_handler()
-async def main_process(message: types.Message):
-    if message.text == '/book':
-        await message.answer("Часть про книжки")
+
+@dp.callback_query_handler(text="catalog")
+async def catalog_command(call: types.CallbackQuery):
+    await call.message.answer("Это каталог")
+
+
+# @dp.message_handler()
+# async def main_process(message: types.Message):
+#     if message.text == '/book':
+#         await message.answer("Часть про книжки")
 
 
 

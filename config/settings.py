@@ -12,7 +12,8 @@ SETTINGS = {
 }
 
 TABLES_NAME_DB_CONFIG = {
-    'users': 'users'
+    'users': 'users',
+    'version': 'version'
 }
 
 AUTHOR = 'yakummi | Ivan Gorobtsov'
