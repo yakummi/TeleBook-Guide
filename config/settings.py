@@ -17,3 +17,12 @@ TABLES_NAME_DB_CONFIG = {
 }
 
 AUTHOR = 'yakummi | Ivan Gorobtsov'
+
+START_MESSAGE = {
+    'message': "Привет, это TeleBook!\nЯ помогу тебе найти подходящую книгу для прочтения на досуге!",
+    'images': ['images/start_image.jpg']
+}
+
+CATALOG_MESSAGE = {
+    'message': "Это каталог!"
+}
