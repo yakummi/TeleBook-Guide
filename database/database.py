@@ -24,6 +24,83 @@ class Database:
             """)
             self.conn.commit()
 
+            cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['python']} (
+            id INT not null generated always as identity primary key,   
+            name TEXT,
+            image TEXT,
+            description TEXT 
+            )
+            """)
+            self.conn.commit()
+
+            cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['javascript']} (
+            id INT not null generated always as identity primary key,   
+            name TEXT,
+            image TEXT,
+            description TEXT 
+            )
+            """)
+            self.conn.commit()
+
+            cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['java']} (
+            id INT not null generated always as identity primary key,   
+            name TEXT,
+            image TEXT,
+            description TEXT 
+            )
+            """)
+            self.conn.commit()
+
+
+            cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['c_plus2']} (
+            id INT not null generated always as identity primary key,   
+            name TEXT,
+            image TEXT,
+            description TEXT 
+            )
+            """)
+            self.conn.commit()
+
+            cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books_python']} (
+            id INT not null generated always as identity primary key,   
+            id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
+            id_book INT references {TABLES_NAME_DB_CONFIG['python']} (id) on delete set null
+            )
+            """)
+            self.conn.commit()
+
+            cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books_c_plus2']} (
+            id INT not null generated always as identity primary key,   
+            id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
+            id_book INT references {TABLES_NAME_DB_CONFIG['c_plus2']} (id) on delete set null
+            )
+            """)
+            self.conn.commit()
+
+            cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books_javascript']} (
+            id INT not null generated always as identity primary key,   
+            id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
+            id_book INT references {TABLES_NAME_DB_CONFIG['javascript']} (id) on delete set null
+            )
+            """)
+            self.conn.commit()
+
+            cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books_java']} (
+            id INT not null generated always as identity primary key,   
+            id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
+            id_book INT references {TABLES_NAME_DB_CONFIG['java']} (id) on delete set null
+            )
+            """)
+            self.conn.commit()
+
 
     def delete_tables(self):
         password = input("Введите пароль для удаления таблиц из базы: ")
@@ -83,10 +160,11 @@ class Database:
             """
 
             cur.execute(select_request)
-            result = cur.fetchall()
+            version_project = cur.fetchall()
 
-            return result[0][0] # версия проекта
+            return version_project[0][0]
+
 
 
 DATABASE = Database()
-DATABASE.version_get()
+DATABASE.create_tables()

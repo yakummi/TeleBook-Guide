@@ -13,7 +13,16 @@ SETTINGS = {
 
 TABLES_NAME_DB_CONFIG = {
     'users': 'users',
-    'version': 'version'
+    'version': 'version',
+    'python': 'python',
+    'javascript': 'js',
+    'java': 'java',
+    'c_plus2': 'c_plus2',
+    'all_users_favourites_books_python': 'favourite_book_python',
+    'all_users_favourites_books_c_plus2': 'favourite_book_c_plus2',
+    'all_users_favourites_books_javascript': 'favourite_book_js',
+    'all_users_favourites_books_java': 'favourite_book_java'
+
 }
 
 AUTHOR = 'yakummi | Ivan Gorobtsov'
