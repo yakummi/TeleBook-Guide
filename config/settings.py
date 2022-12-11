@@ -17,9 +17,7 @@ TABLES_NAME_DB_CONFIG = {
     'python': 'python',
     'javascript': 'js',
     'java': 'java',
-    'all_users_favourites_books_python': 'favourite_book_python',
-    'all_users_favourites_books_javascript': 'favourite_book_js',
-    'all_users_favourites_books_java': 'favourite_book_java'
+    'all_users_favourites_books': 'favourite_books'
 
 }
 

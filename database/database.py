@@ -52,28 +52,11 @@ class Database:
             self.conn.commit()
 
             cur.execute(f"""
-            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books_python']} (
+            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books']} (
             id INT not null generated always as identity primary key,   
             id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
-            id_book INT references {TABLES_NAME_DB_CONFIG['python']} (id) on delete set null
-            )
-            """)
-            self.conn.commit()
-
-            cur.execute(f"""
-            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books_javascript']} (
-            id INT not null generated always as identity primary key,   
-            id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
-            id_book INT references {TABLES_NAME_DB_CONFIG['javascript']} (id) on delete set null
-            )
-            """)
-            self.conn.commit()
-
-            cur.execute(f"""
-            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books_java']} (
-            id INT not null generated always as identity primary key,   
-            id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
-            id_book INT references {TABLES_NAME_DB_CONFIG['java']} (id) on delete set null
+            name TEXT,
+            image TEXT
             )
             """)
             self.conn.commit()
@@ -249,5 +232,122 @@ class Database:
                 self.insert_java(name=name, image=image)
                 self.conn.commit()
 
+    def count_strings_python(self):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT COUNT(name)
+            FROM {TABLES_NAME_DB_CONFIG['python']}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            return result
+
+    def count_strings_java(self):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT COUNT(name)
+            FROM {TABLES_NAME_DB_CONFIG['java']}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            return result
+
+    def count_strings_javascript(self):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT COUNT(name)
+            FROM {TABLES_NAME_DB_CONFIG['javascript']}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            return result
+
+    def select_python_id(self, id):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT name, image
+            FROM {TABLES_NAME_DB_CONFIG['python']}
+            WHERE id = {id}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            return result
+
+    def select_javascript_id(self, id):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT name, image
+            FROM {TABLES_NAME_DB_CONFIG['javascript']}
+            WHERE id = {id}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            return result
+
+    def select_java_id(self, id):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT name, image
+            FROM {TABLES_NAME_DB_CONFIG['java']}
+            WHERE id = {id}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            return result
+
+
+    def add_favourite_books_id(self, id_user, name, image):
+        with self.conn.cursor() as cur:
+            cur.execute(f"""
+            INSERT INTO {TABLES_NAME_DB_CONFIG['all_users_favourites_books']} (id_user, name, image)
+            VALUES ({(id_user)}, {(repr(name))}, {repr(image)});
+            """)
+
+            self.conn.commit()
+
+
+    def check_favourite_books_id(self, id_user, name, image):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT *
+            FROM {TABLES_NAME_DB_CONFIG['all_users_favourites_books']}
+            WHERE name = {name}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            if result == []:
+                self.add_favourite_books_id(id_user=id_user, name=name, image=image)
+                self.conn.commit()
+
+
+    def get_id_user(self, id_user, name, image):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT id
+            FROM {TABLES_NAME_DB_CONFIG['users']}
+            WHERE id_user = {id_user}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+            print(result)
+            print(id_user)
+
+            self.add_favourite_books_id(result[0][0], name, image)
 
 DATABASE = Database()
+DATABASE.create_tables()
