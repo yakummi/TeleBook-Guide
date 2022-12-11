@@ -13,7 +13,7 @@ class ClientParser:
             title = elements.find('a', 'product-card__name smartLink').text
             image_parser = elements.find('source', {'type': 'image/jpg'}).get('data-srcset') # доделать
             image = ('https:'+image_parser).split(' ')[0]
-            DATABASE.insert_python(name=title, image=image)
+            DATABASE.check_parser_python(name=repr(title), image=repr(image))
 
 
     def parser_java(self):
@@ -24,7 +24,7 @@ class ClientParser:
             title = elements.find('a', 'product-card__name smartLink').text
             image_parser = elements.find('source', {'type': 'image/jpg'}).get('data-srcset') # доделать
             image = ('https:'+image_parser).split(' ')[0]
-            DATABASE.insert_java(name=title, image=image)
+            DATABASE.check_parser_java(name=repr(title), image=repr(image))
 
     def parser_javascript(self):
         response = requests.get(url=URL, headers=headers, params=javascript_params)
@@ -34,10 +34,9 @@ class ClientParser:
             title = elements.find('a', 'product-card__name smartLink').text
             image_parser = elements.find('source', {'type': 'image/jpg'}).get('data-srcset') # доделать
             image = ('https:' + image_parser).split(' ')[0]
-            DATABASE.insert_javascript(name=title, image=image)
-
-
+            DATABASE.check_parser_javascript(name=repr(title), image=repr(image))
 
 c = ClientParser()
 c.parser_javascript()
-
+c.parser_java()
+c.parser_python()

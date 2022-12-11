@@ -145,7 +145,7 @@ class Database:
         with self.conn.cursor() as cur:
             cur.execute(f"""
             INSERT INTO {TABLES_NAME_DB_CONFIG['python']} (name, image)
-            VALUES ({repr(name)}, {repr(image)});
+            VALUES ({(name)}, {(image)});
             """)
 
             self.conn.commit()
@@ -154,7 +154,7 @@ class Database:
         with self.conn.cursor() as cur:
             cur.execute(f"""
             INSERT INTO {TABLES_NAME_DB_CONFIG['java']} (name, image)
-            VALUES ({repr(name)}, {repr(image)});
+            VALUES ({(name)}, {(image)});
             """)
 
             self.conn.commit()
@@ -163,29 +163,91 @@ class Database:
         with self.conn.cursor() as cur:
             cur.execute(f"""
             INSERT INTO {TABLES_NAME_DB_CONFIG['javascript']} (name, image)
-            VALUES ({repr(name)}, {repr(image)});
+            VALUES ({(name)}, {(image)});
             """)
 
             self.conn.commit()
 
     def select_python(self):
-        pass
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT name, image
+            FROM {TABLES_NAME_DB_CONFIG['python']}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            return result
 
     def select_javascript(self):
-        pass
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT name, image
+            FROM {TABLES_NAME_DB_CONFIG['javascript']}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            return result
     
     def select_java(self):
-        pass
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT name, image
+            FROM {TABLES_NAME_DB_CONFIG['java']}
+            """
 
-    def check_parser_python(self):
-        pass
+            cur.execute(select_request)
+            result = cur.fetchall()
 
-    def check_parser_javascript(self):
-        pass
+            return result
 
-    def check_parser_java(self):
-        pass
+    def check_parser_python(self, name, image):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT *
+            FROM {TABLES_NAME_DB_CONFIG['python']}
+            WHERE name = {name}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            if result == []:
+                self.insert_python(name=name, image=image)
+                self.conn.commit()
+
+    def check_parser_javascript(self, name, image):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT *
+            FROM {TABLES_NAME_DB_CONFIG['javascript']}
+            WHERE name = {name}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            if result == []:
+                self.insert_javascript(name=name, image=image)
+                self.conn.commit()
+
+    def check_parser_java(self, name, image):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT *
+            FROM {TABLES_NAME_DB_CONFIG['java']}
+            WHERE name = {name}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+
+            if result == []:
+                self.insert_java(name=name, image=image)
+                self.conn.commit()
 
 
 DATABASE = Database()
-DATABASE.create_tables()
