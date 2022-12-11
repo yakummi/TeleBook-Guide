@@ -28,8 +28,7 @@ class Database:
             CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['python']} (
             id INT not null generated always as identity primary key,   
             name TEXT,
-            image TEXT,
-            description TEXT 
+            image TEXT
             )
             """)
             self.conn.commit()
@@ -38,8 +37,7 @@ class Database:
             CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['javascript']} (
             id INT not null generated always as identity primary key,   
             name TEXT,
-            image TEXT,
-            description TEXT 
+            image TEXT
             )
             """)
             self.conn.commit()
@@ -48,19 +46,7 @@ class Database:
             CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['java']} (
             id INT not null generated always as identity primary key,   
             name TEXT,
-            image TEXT,
-            description TEXT 
-            )
-            """)
-            self.conn.commit()
-
-
-            cur.execute(f"""
-            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['c_plus2']} (
-            id INT not null generated always as identity primary key,   
-            name TEXT,
-            image TEXT,
-            description TEXT 
+            image TEXT
             )
             """)
             self.conn.commit()
@@ -70,15 +56,6 @@ class Database:
             id INT not null generated always as identity primary key,   
             id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
             id_book INT references {TABLES_NAME_DB_CONFIG['python']} (id) on delete set null
-            )
-            """)
-            self.conn.commit()
-
-            cur.execute(f"""
-            CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['all_users_favourites_books_c_plus2']} (
-            id INT not null generated always as identity primary key,   
-            id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
-            id_book INT references {TABLES_NAME_DB_CONFIG['c_plus2']} (id) on delete set null
             )
             """)
             self.conn.commit()
@@ -164,6 +141,50 @@ class Database:
 
             return version_project[0][0]
 
+    def insert_python(self, name, image):
+        with self.conn.cursor() as cur:
+            cur.execute(f"""
+            INSERT INTO {TABLES_NAME_DB_CONFIG['python']} (name, image)
+            VALUES ({repr(name)}, {repr(image)});
+            """)
+
+            self.conn.commit()
+
+    def insert_java(self, name, image):
+        with self.conn.cursor() as cur:
+            cur.execute(f"""
+            INSERT INTO {TABLES_NAME_DB_CONFIG['java']} (name, image)
+            VALUES ({repr(name)}, {repr(image)});
+            """)
+
+            self.conn.commit()
+
+    def insert_javascript(self, name, image):
+        with self.conn.cursor() as cur:
+            cur.execute(f"""
+            INSERT INTO {TABLES_NAME_DB_CONFIG['javascript']} (name, image)
+            VALUES ({repr(name)}, {repr(image)});
+            """)
+
+            self.conn.commit()
+
+    def select_python(self):
+        pass
+
+    def select_javascript(self):
+        pass
+    
+    def select_java(self):
+        pass
+
+    def check_parser_python(self):
+        pass
+
+    def check_parser_javascript(self):
+        pass
+
+    def check_parser_java(self):
+        pass
 
 
 DATABASE = Database()

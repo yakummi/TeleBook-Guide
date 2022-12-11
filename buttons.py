@@ -24,7 +24,23 @@ urlkb_catalog.add(urlbutton1_catalog, urlbutton2_catalog, urlbutton3_catalog)
 urlkb_catalog_it = InlineKeyboardMarkup(row_width=2)
 urlbutton1_catalog_it = InlineKeyboardButton(text="Python", callback_data="python")
 urlbutton2_catalog_it = InlineKeyboardButton(text="Java", callback_data="java")
-urlbutton3_catalog_it = InlineKeyboardButton(text="C++", callback_data="c++")
-urlbutton4_catalog_it = InlineKeyboardButton(text="JavaScript", callback_data="javascript")
-urlbutton5_catalog_it = InlineKeyboardButton(text="Вернуться", callback_data="exit_it")
-urlkb_catalog_it.add(urlbutton1_catalog_it, urlbutton2_catalog_it, urlbutton3_catalog_it, urlbutton4_catalog_it, urlbutton5_catalog_it)
+urlbutton3_catalog_it = InlineKeyboardButton(text="JavaScript", callback_data="javascript")
+urlbutton4_catalog_it = InlineKeyboardButton(text="Вернуться", callback_data="exit_it")
+urlkb_catalog_it.add(urlbutton1_catalog_it, urlbutton2_catalog_it, urlbutton3_catalog_it)
+urlkb_catalog_it.add(urlbutton4_catalog_it)
+
+# Python Command
+
+# -----------------------------------------------------------
+
+
+# JavaScript Command
+
+
+# ------------------------------------------------------------
+
+
+# Java Command
+
+
+# -----------------------------------------------------------
