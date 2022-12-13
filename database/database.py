@@ -350,4 +350,3 @@ class Database:
             self.add_favourite_books_id(result[0][0], name, image)
 
 DATABASE = Database()
-DATABASE.create_tables()

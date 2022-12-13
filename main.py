@@ -77,32 +77,38 @@ async def java_book(call: types.CallbackQuery):
     info = DATABASE.select_java_id(1)
     await call.message.answer(f"{info}", reply_markup=urlkb_catalog_java)
 
-@dp.callback_query_handler(text="next_book_python")
+
+@dp.callback_query_handler(text=["next_book_python", 'add_favourite'])
 async def next_python(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_python()[0][0])
     info = DATABASE.select_python_id(number)
-    await call.message.answer(f"{info}", reply_markup=urlkb_catalog_python)
-    if call.message.text == "add_favourite":
+    if call.data == 'add_favourite':
         user_id = call.from_user.id
         DATABASE.get_id_user(user_id, info[0][0], info[0][1])
+    else:
+        await call.message.answer(f"{info}", reply_markup=urlkb_catalog_python)
 
-@dp.callback_query_handler(text="next_book_java")
+
+
+@dp.callback_query_handler(text=["next_book_java", 'add_favourite'])
 async def next_java(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_java()[0][0])
     info = DATABASE.select_java_id(number)
-    await call.message.answer(f"{info}", reply_markup=urlkb_catalog_java)
-    if call.message.text == "add_favourite":
+    if call.data == 'add_favourite':
         user_id = call.from_user.id
         DATABASE.get_id_user(user_id, info[0][0], info[0][1])
+    else:
+        await call.message.answer(f"{info}", reply_markup=urlkb_catalog_python)
 
-@dp.callback_query_handler(text="next_book_javascript")
+@dp.callback_query_handler(text=["next_book_javascript", "add_favourites"])
 async def next_javascript(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_javascript()[0][0])
     info = DATABASE.select_javascript_id(number)
-    await call.message.answer(f"{info}", reply_markup=urlkb_catalog_javascript)
-    if call.message.text == "add_favourite":
+    if call.data == 'add_favourite':
         user_id = call.from_user.id
         DATABASE.get_id_user(user_id, info[0][0], info[0][1])
+    else:
+        await call.message.answer(f"{info}", reply_markup=urlkb_catalog_python)
 
 @dp.callback_query_handler(text='favourites')
 async def get_all_favourites_books_from_user(call: types.CallbackQuery):
@@ -127,8 +133,12 @@ async def get_all_favourites_books_from_user(call: types.CallbackQuery):
         cur.execute(select_request2)
         books = cur.fetchall()
 
+        print(books)
+
         for book in books:
             await call.message.answer(f"{book[0]}\n{book[1]}", reply_markup=urlkb)
 
+        cur.close()
+
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp, skip_updates=False)
