@@ -9,6 +9,15 @@ urlkb.add(urlbutton1, urlbutton2)
 
 # -----------------------------------------
 
+# Favourite Books
+
+urlkb_favourite = InlineKeyboardMarkup()
+urlkb_favourite_button1 = InlineKeyboardButton(text="Удалить из избранных", callback_data="delete_favourite")
+urlkb_favourite.add(urlkb_favourite_button1)
+
+# --------------------------------------------------
+
+
 # Catalog Command
 
 urlkb_catalog = InlineKeyboardMarkup(row_width=1)

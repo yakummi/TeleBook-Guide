@@ -349,4 +349,7 @@ class Database:
 
             self.add_favourite_books_id(result[0][0], name, image)
 
+    def delete_favourites_books(self):
+        pass
+
 DATABASE = Database()
