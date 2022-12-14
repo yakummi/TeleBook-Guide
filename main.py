@@ -1,5 +1,5 @@
 from aiogram import Dispatcher, Bot, executor, types
-from config.settings import SETTINGS, START_MESSAGE, CATALOG_MESSAGE, TABLES_NAME_DB_CONFIG
+from config.settings import SETTINGS, START_MESSAGE, CATALOG_MESSAGE, TABLES_NAME_DB_CONFIG, IT_CATALOG
 from database.database import DATABASE
 from aiogram.types import InputFile
 import psycopg2
@@ -44,25 +44,38 @@ async def exit_command_from_catalog(call: types.CallbackQuery):
 
 @dp.callback_query_handler(text="it_catalog")
 async def it_catalog_command(call: types.CallbackQuery):
-    await call.message.answer("Не забыть картинку", reply_markup=urlkb_catalog_it)
+    photo = InputFile(IT_CATALOG['images'][0])
+    await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
+    await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
+
 
 @dp.callback_query_handler(text="exit_it")
 async def it_catalog_command(call: types.CallbackQuery):
-    await call.message.answer(CATALOG_MESSAGE['message'], reply_markup=urlkb_catalog)
+    photo = InputFile(IT_CATALOG['images'][0])
+    await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
+    await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
+
 
 @dp.callback_query_handler(text="exit_python")
 async def it_catalog_command(call: types.CallbackQuery):
-    await call.message.answer("Не забыть картинку", reply_markup=urlkb_catalog_it)
+    photo = InputFile(IT_CATALOG['images'][0])
+    await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
+    await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
 
 
 @dp.callback_query_handler(text="exit_java")
 async def it_catalog_command(call: types.CallbackQuery):
-    await call.message.answer("Не забыть картинку", reply_markup=urlkb_catalog_it)
+    photo = InputFile(IT_CATALOG['images'][0])
+    await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
+    await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
 
 
 @dp.callback_query_handler(text="exit_javascript")
 async def it_catalog_command(call: types.CallbackQuery):
-    await call.message.answer("Не забыть картинку", reply_markup=urlkb_catalog_it)
+    photo = InputFile(IT_CATALOG['images'][0])
+    await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
+    await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
+
 
 @dp.callback_query_handler(text=["python", "next_book_python", 'add_favourite'])
 async def next_python(call: types.CallbackQuery):
