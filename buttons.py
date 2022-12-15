@@ -34,8 +34,11 @@ urlbutton1_catalog_it = InlineKeyboardButton(text="Python", callback_data="pytho
 urlbutton2_catalog_it = InlineKeyboardButton(text="Java", callback_data="java")
 urlbutton3_catalog_it = InlineKeyboardButton(text="JavaScript", callback_data="javascript")
 urlbutton4_catalog_it = InlineKeyboardButton(text="Вернуться", callback_data="exit_it")
+urlbutton5_catalog_it = InlineKeyboardButton(text="Лучшие книги", callback_data="top_it")
 urlkb_catalog_it.add(urlbutton1_catalog_it, urlbutton2_catalog_it, urlbutton3_catalog_it)
+urlkb_catalog_it.add(urlbutton5_catalog_it)
 urlkb_catalog_it.add(urlbutton4_catalog_it)
+
 
 # Python Command
 

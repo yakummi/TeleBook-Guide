@@ -352,4 +352,32 @@ class Database:
     def delete_favourites_books(self):
         pass
 
+    def get_all_users_book(self, name):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+                        SELECT name
+                        FROM {TABLES_NAME_DB_CONFIG['all_users_favourites_books']}
+                        WHERE name = {name}
+                        """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+            if result == []:
+                return 0
+            return len(result[0])
+
+    def get_all_top_books(self):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT name
+            FROM {TABLES_NAME_DB_CONFIG['all_users_favourites_books']}
+            ORDER BY name
+            LIMIT 5
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+            return result
+
 DATABASE = Database()
+DATABASE.get_all_top_books()

@@ -6,7 +6,6 @@ import psycopg2
 from buttons import urlkb, urlkb_catalog, urlkb_catalog_it, urlkb_catalog_javascript, urlkb_catalog_python, urlkb_catalog_java, urlkb_favourite
 import random
 from aiogram.utils.markdown import hide_link
-import requests
 
 bot = Bot(token=SETTINGS['token'])
 
@@ -51,9 +50,7 @@ async def it_catalog_command(call: types.CallbackQuery):
 
 @dp.callback_query_handler(text="exit_it")
 async def it_catalog_command(call: types.CallbackQuery):
-    photo = InputFile(IT_CATALOG['images'][0])
-    await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
-    await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
+    await call.message.answer(CATALOG_MESSAGE['message'], reply_markup=urlkb_catalog)
 
 
 @dp.callback_query_handler(text="exit_python")
@@ -81,11 +78,11 @@ async def it_catalog_command(call: types.CallbackQuery):
 async def next_python(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_python()[0][0])
     info = DATABASE.select_python_id(number)
+    likes = DATABASE.get_all_users_book(repr(info[0][0]))
     if call.data == 'add_favourite':
         user_id = call.from_user.id
         DATABASE.get_id_user(user_id, info[0][0], info[0][1])
-    else:
-        await call.message.answer(f"{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_python)
+    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_python)
 
 
 
@@ -93,21 +90,21 @@ async def next_python(call: types.CallbackQuery):
 async def next_java(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_java()[0][0])
     info = DATABASE.select_java_id(number)
+    likes = DATABASE.get_all_users_book(repr(info[0][0]))
     if call.data == 'add_favourite':
         user_id = call.from_user.id
         DATABASE.get_id_user(user_id, info[0][0], info[0][1])
-    else:
-        await call.message.answer(f"{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_java)
+    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_java)
 
-@dp.callback_query_handler(text=["javascript", "next_book_javascript", "add_favourites"])
+@dp.callback_query_handler(text=["javascript", "next_book_javascript", 'add_favourite'])
 async def next_javascript(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_javascript()[0][0])
     info = DATABASE.select_javascript_id(number)
+    likes = DATABASE.get_all_users_book(repr(info[0][0]))
     if call.data == 'add_favourite':
         user_id = call.from_user.id
         DATABASE.get_id_user(user_id, info[0][0], info[0][1])
-    else:
-        await call.message.answer(f"{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_javascript)
+    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_javascript)
 
 @dp.callback_query_handler(text=['favourites', "delete_favourite"])
 async def get_all_favourites_books_from_user(call: types.CallbackQuery):
@@ -136,10 +133,7 @@ async def get_all_favourites_books_from_user(call: types.CallbackQuery):
             print("q")
             cal = call.message.text
 
-
         else:
-
-            print(books)
 
             for book in books:
                 await call.message.answer(f"{book[0]}{hide_link(book[1])}", parse_mode='HTML', reply_markup=urlkb_favourite)
@@ -150,5 +144,14 @@ async def get_all_favourites_books_from_user(call: types.CallbackQuery):
 
         cur.close()
 
+@dp.callback_query_handler(text='top_it')
+async def top_it_books(call: types.CallbackQuery):
+    top_books = DATABASE.get_all_top_books()
+    for book in top_books:
+        await call.message.answer(f"{book[0]}")
+    photo = InputFile(IT_CATALOG['images'][0])
+    await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
+    await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
+
 if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=False)
+    executor.start_polling(dp, skip_updates=True)
