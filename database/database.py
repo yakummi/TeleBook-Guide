@@ -346,8 +346,27 @@ class Database:
             result = cur.fetchall()
             self.check_favourite_books_id(result[0][0], name, image)
 
-    def delete_favourites_books(self):
-        pass
+    def delete_favourites_books(self, id_user, name): # доделать
+        with self.conn.cursor() as cur:
+            cur.execute(f"""
+            DELETE FROM {TABLES_NAME_DB_CONFIG['all_users_favourites_books']}
+            WHERE id_user = {id_user} AND name = {repr(name)};
+            """)
+
+            self.conn.commit()
+
+
+    def get_id_user_for_delete_favourites_books(self, id_user, name):
+        with self.conn.cursor() as cur:
+            select_request = f"""
+            SELECT id
+            FROM {TABLES_NAME_DB_CONFIG['users']}
+            WHERE id_user = {id_user}
+            """
+
+            cur.execute(select_request)
+            result = cur.fetchall()
+            self.delete_favourites_books(id_user=result[0][0], name=name)
 
     def get_all_users_book(self, name):
         with self.conn.cursor() as cur:

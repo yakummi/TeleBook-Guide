@@ -97,7 +97,7 @@ async def next_javascript(call: types.CallbackQuery):
     likes = DATABASE.get_all_users_book(repr(info[0][0]))
     await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_javascript)
 
-@dp.callback_query_handler(text=['favourites', "delete_favourite"])
+@dp.callback_query_handler(text=['favourites'])
 async def get_all_favourites_books_from_user(call: types.CallbackQuery):
     conn = psycopg2.connect(database=SETTINGS["dbname"], user=SETTINGS['user'], password=SETTINGS["password"])
     user_id = call.from_user.id
@@ -120,18 +120,13 @@ async def get_all_favourites_books_from_user(call: types.CallbackQuery):
         cur.execute(select_request2)
         books = cur.fetchall()
 
-        if call.data == "delete_favourite":
-            print("q")
-            cal = call.message.text
 
-        else:
+        for book in books:
+            await call.message.answer(f"{book[0]}{hide_link(book[1])}", parse_mode='HTML', reply_markup=urlkb_favourite)
 
-            for book in books:
-                await call.message.answer(f"{book[0]}{hide_link(book[1])}", parse_mode='HTML', reply_markup=urlkb_favourite)
-
-            photo = InputFile(START_MESSAGE['images'][0])
-            await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
-            await call.message.answer(START_MESSAGE['message'], reply_markup=urlkb)
+        photo = InputFile(START_MESSAGE['images'][0])
+        await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
+        await call.message.answer(START_MESSAGE['message'], reply_markup=urlkb)
 
         cur.close()
 
@@ -151,6 +146,13 @@ async def add_favourite_book(call: types.CallbackQuery):
     text = (call.message.text.split('\n')[1]).split('\u2060')[0]
     user_id = call.from_user.id
     DATABASE.get_id_user(user_id, text, photo)
+
+
+@dp.callback_query_handler(text='delete_favourite')
+async def delete_favourite_book(call: types.CallbackQuery):
+    text = call.message.text
+    user_id = call.from_user.id
+    DATABASE.get_id_user_for_delete_favourites_books(id_user=user_id, name=text)
 
 
 if __name__ == '__main__':
