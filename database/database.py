@@ -323,7 +323,7 @@ class Database:
             select_request = f"""
             SELECT *
             FROM {TABLES_NAME_DB_CONFIG['all_users_favourites_books']}
-            WHERE name = {name}
+            WHERE name = {repr(name)} AND id_user = {id_user}
             """
 
             cur.execute(select_request)
@@ -344,10 +344,7 @@ class Database:
 
             cur.execute(select_request)
             result = cur.fetchall()
-            print(result)
-            print(id_user)
-
-            self.add_favourite_books_id(result[0][0], name, image)
+            self.check_favourite_books_id(result[0][0], name, image)
 
     def delete_favourites_books(self):
         pass

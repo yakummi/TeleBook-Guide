@@ -74,36 +74,27 @@ async def it_catalog_command(call: types.CallbackQuery):
     await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
 
 
-@dp.callback_query_handler(text=["python", "next_book_python", 'add_favourite'])
+@dp.callback_query_handler(text=["python", "next_book_python"])
 async def next_python(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_python()[0][0])
     info = DATABASE.select_python_id(number)
     likes = DATABASE.get_all_users_book(repr(info[0][0]))
-    if call.data == 'add_favourite':
-        user_id = call.from_user.id
-        DATABASE.get_id_user(user_id, info[0][0], info[0][1])
     await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_python)
 
 
 
-@dp.callback_query_handler(text=["java", "next_book_java", 'add_favourite'])
+@dp.callback_query_handler(text=["java", "next_book_java"])
 async def next_java(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_java()[0][0])
     info = DATABASE.select_java_id(number)
     likes = DATABASE.get_all_users_book(repr(info[0][0]))
-    if call.data == 'add_favourite':
-        user_id = call.from_user.id
-        DATABASE.get_id_user(user_id, info[0][0], info[0][1])
     await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_java)
 
-@dp.callback_query_handler(text=["javascript", "next_book_javascript", 'add_favourite'])
+@dp.callback_query_handler(text=["javascript", "next_book_javascript"])
 async def next_javascript(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_javascript()[0][0])
     info = DATABASE.select_javascript_id(number)
     likes = DATABASE.get_all_users_book(repr(info[0][0]))
-    if call.data == 'add_favourite':
-        user_id = call.from_user.id
-        DATABASE.get_id_user(user_id, info[0][0], info[0][1])
     await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_javascript)
 
 @dp.callback_query_handler(text=['favourites', "delete_favourite"])
@@ -152,6 +143,15 @@ async def top_it_books(call: types.CallbackQuery):
     photo = InputFile(IT_CATALOG['images'][0])
     await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
     await call.message.answer(IT_CATALOG['message'], reply_markup=urlkb_catalog_it)
+
+
+@dp.callback_query_handler(text='add_favourite')
+async def add_favourite_book(call: types.CallbackQuery):
+    photo = (call.message.html_text.split('<a href="')[1]).split('">\u2060')[0]
+    text = (call.message.text.split('\n')[1]).split('\u2060')[0]
+    user_id = call.from_user.id
+    DATABASE.get_id_user(user_id, text, photo)
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
