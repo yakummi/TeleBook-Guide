@@ -11,10 +11,13 @@ class ClientParser:
         container = soup.find_all('div', 'product-list__item')
         for elements in container:
             title = elements.find('a', 'product-card__name smartLink').text
+            link = elements.find('a', 'product-card__name smartLink').get('href')
+            response_description = requests.get(url='https://book24.ru'+link, headers=headers)
+            soup_description = BeautifulSoup(response_description.text, 'html.parser')
+            container_description = soup_description.find('span', 'app-price product-sidebar-price__price').text
             image_parser = elements.find('source', {'type': 'image/jpg'}).get('data-srcset') # доделать
             image = ('https:'+image_parser).split(' ')[0]
-            DATABASE.check_parser_python(name=repr(title), image=repr(image))
-
+            DATABASE.check_parser_python(name=repr(title), image=repr(image), price=repr(container_description.lstrip()))
 
     def parser_java(self):
         response = requests.get(url=URL, headers=headers, params=java_params)
@@ -24,7 +27,11 @@ class ClientParser:
             title = elements.find('a', 'product-card__name smartLink').text
             image_parser = elements.find('source', {'type': 'image/jpg'}).get('data-srcset') # доделать
             image = ('https:'+image_parser).split(' ')[0]
-            DATABASE.check_parser_java(name=repr(title), image=repr(image))
+            link = elements.find('a', 'product-card__name smartLink').get('href')
+            response_description = requests.get(url='https://book24.ru' + link, headers=headers)
+            soup_description = BeautifulSoup(response_description.text, 'html.parser')
+            container_description = soup_description.find('span', 'app-price product-sidebar-price__price').text
+            DATABASE.check_parser_java(name=repr(title), image=repr(image), price=repr(container_description.lstrip()))
 
     def parser_javascript(self):
         response = requests.get(url=URL, headers=headers, params=javascript_params)
@@ -34,7 +41,11 @@ class ClientParser:
             title = elements.find('a', 'product-card__name smartLink').text
             image_parser = elements.find('source', {'type': 'image/jpg'}).get('data-srcset') # доделать
             image = ('https:' + image_parser).split(' ')[0]
-            DATABASE.check_parser_javascript(name=repr(title), image=repr(image))
+            link = elements.find('a', 'product-card__name smartLink').get('href')
+            response_description = requests.get(url='https://book24.ru' + link, headers=headers)
+            soup_description = BeautifulSoup(response_description.text, 'html.parser')
+            container_description = soup_description.find('span', 'app-price product-sidebar-price__price').text
+            DATABASE.check_parser_javascript(name=repr(title), image=repr(image), price=repr(container_description.lstrip()))
 
 c = ClientParser()
 c.parser_javascript()

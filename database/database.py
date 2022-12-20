@@ -28,7 +28,8 @@ class Database:
             CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['python']} (
             id INT not null generated always as identity primary key,   
             name TEXT,
-            image TEXT
+            image TEXT,
+            price TEXT
             )
             """)
             self.conn.commit()
@@ -37,7 +38,8 @@ class Database:
             CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['javascript']} (
             id INT not null generated always as identity primary key,   
             name TEXT,
-            image TEXT
+            image TEXT,
+            price TEXT
             )
             """)
             self.conn.commit()
@@ -46,7 +48,8 @@ class Database:
             CREATE TABLE IF NOT EXISTS {TABLES_NAME_DB_CONFIG['java']} (
             id INT not null generated always as identity primary key,   
             name TEXT,
-            image TEXT
+            image TEXT,
+            price TEXT
             )
             """)
             self.conn.commit()
@@ -56,7 +59,8 @@ class Database:
             id INT not null generated always as identity primary key,   
             id_user INT references {TABLES_NAME_DB_CONFIG['users']} (id) on delete set null,
             name TEXT,
-            image TEXT
+            image TEXT,
+            price TEXT
             )
             """)
             self.conn.commit()
@@ -124,29 +128,29 @@ class Database:
 
             return version_project[0][0]
 
-    def insert_python(self, name, image):
+    def insert_python(self, name, image, price):
         with self.conn.cursor() as cur:
             cur.execute(f"""
-            INSERT INTO {TABLES_NAME_DB_CONFIG['python']} (name, image)
-            VALUES ({(name)}, {(image)});
+            INSERT INTO {TABLES_NAME_DB_CONFIG['python']} (name, image, price)
+            VALUES ({(name)}, {(image)}, {(price)});
             """)
 
             self.conn.commit()
 
-    def insert_java(self, name, image):
+    def insert_java(self, name, image, price):
         with self.conn.cursor() as cur:
             cur.execute(f"""
-            INSERT INTO {TABLES_NAME_DB_CONFIG['java']} (name, image)
-            VALUES ({(name)}, {(image)});
+            INSERT INTO {TABLES_NAME_DB_CONFIG['java']} (name, image, price)
+            VALUES ({(name)}, {(image)}, {(price)});
             """)
 
             self.conn.commit()
 
-    def insert_javascript(self, name, image):
+    def insert_javascript(self, name, image, price):
         with self.conn.cursor() as cur:
             cur.execute(f"""
-            INSERT INTO {TABLES_NAME_DB_CONFIG['javascript']} (name, image)
-            VALUES ({(name)}, {(image)});
+            INSERT INTO {TABLES_NAME_DB_CONFIG['javascript']} (name, image, price)
+            VALUES ({(name)}, {(image)}, {(price)});
             """)
 
             self.conn.commit()
@@ -154,7 +158,7 @@ class Database:
     def select_python(self):
         with self.conn.cursor() as cur:
             select_request = f"""
-            SELECT name, image
+            SELECT name, image, price
             FROM {TABLES_NAME_DB_CONFIG['python']}
             """
 
@@ -166,7 +170,7 @@ class Database:
     def select_javascript(self):
         with self.conn.cursor() as cur:
             select_request = f"""
-            SELECT name, image
+            SELECT name, image, price
             FROM {TABLES_NAME_DB_CONFIG['javascript']}
             """
 
@@ -178,7 +182,7 @@ class Database:
     def select_java(self):
         with self.conn.cursor() as cur:
             select_request = f"""
-            SELECT name, image
+            SELECT name, image, price
             FROM {TABLES_NAME_DB_CONFIG['java']}
             """
 
@@ -187,7 +191,7 @@ class Database:
 
             return result
 
-    def check_parser_python(self, name, image):
+    def check_parser_python(self, name, image, price):
         with self.conn.cursor() as cur:
             select_request = f"""
             SELECT *
@@ -199,10 +203,10 @@ class Database:
             result = cur.fetchall()
 
             if result == []:
-                self.insert_python(name=name, image=image)
+                self.insert_python(name=name, image=image, price=price)
                 self.conn.commit()
 
-    def check_parser_javascript(self, name, image):
+    def check_parser_javascript(self, name, image, price):
         with self.conn.cursor() as cur:
             select_request = f"""
             SELECT *
@@ -214,10 +218,10 @@ class Database:
             result = cur.fetchall()
 
             if result == []:
-                self.insert_javascript(name=name, image=image)
+                self.insert_javascript(name=name, image=image, price=price)
                 self.conn.commit()
 
-    def check_parser_java(self, name, image):
+    def check_parser_java(self, name, image, price):
         with self.conn.cursor() as cur:
             select_request = f"""
             SELECT *
@@ -229,7 +233,7 @@ class Database:
             result = cur.fetchall()
 
             if result == []:
-                self.insert_java(name=name, image=image)
+                self.insert_java(name=name, image=image, price=price)
                 self.conn.commit()
 
     def count_strings_python(self):
@@ -271,7 +275,7 @@ class Database:
     def select_python_id(self, id):
         with self.conn.cursor() as cur:
             select_request = f"""
-            SELECT name, image
+            SELECT name, image, price
             FROM {TABLES_NAME_DB_CONFIG['python']}
             WHERE id = {id}
             """
@@ -284,7 +288,7 @@ class Database:
     def select_javascript_id(self, id):
         with self.conn.cursor() as cur:
             select_request = f"""
-            SELECT name, image
+            SELECT name, image, price
             FROM {TABLES_NAME_DB_CONFIG['javascript']}
             WHERE id = {id}
             """
@@ -297,7 +301,7 @@ class Database:
     def select_java_id(self, id):
         with self.conn.cursor() as cur:
             select_request = f"""
-            SELECT name, image
+            SELECT name, image, price
             FROM {TABLES_NAME_DB_CONFIG['java']}
             WHERE id = {id}
             """
@@ -308,17 +312,17 @@ class Database:
             return result
 
 
-    def add_favourite_books_id(self, id_user, name, image):
+    def add_favourite_books_id(self, id_user, name, image, price):
         with self.conn.cursor() as cur:
             cur.execute(f"""
-            INSERT INTO {TABLES_NAME_DB_CONFIG['all_users_favourites_books']} (id_user, name, image)
-            VALUES ({(id_user)}, {(repr(name))}, {repr(image)});
+            INSERT INTO {TABLES_NAME_DB_CONFIG['all_users_favourites_books']} (id_user, name, image, price)
+            VALUES ({(id_user)}, {(repr(name))}, {repr(image)}, {repr(price)});
             """)
 
             self.conn.commit()
 
 
-    def check_favourite_books_id(self, id_user, name, image):
+    def check_favourite_books_id(self, id_user, name, image, price):
         with self.conn.cursor() as cur:
             select_request = f"""
             SELECT *
@@ -330,11 +334,11 @@ class Database:
             result = cur.fetchall()
 
             if result == []:
-                self.add_favourite_books_id(id_user=id_user, name=name, image=image)
+                self.add_favourite_books_id(id_user=id_user, name=name, image=image, price=price)
                 self.conn.commit()
 
 
-    def get_id_user(self, id_user, name, image):
+    def get_id_user(self, id_user, name, image, price):
         with self.conn.cursor() as cur:
             select_request = f"""
             SELECT id
@@ -344,9 +348,9 @@ class Database:
 
             cur.execute(select_request)
             result = cur.fetchall()
-            self.check_favourite_books_id(result[0][0], name, image)
+            self.check_favourite_books_id(result[0][0], name, image, price)
 
-    def delete_favourites_books(self, id_user, name): # доделать
+    def delete_favourites_books(self, id_user, name, price): # доделать
         with self.conn.cursor() as cur:
             cur.execute(f"""
             DELETE FROM {TABLES_NAME_DB_CONFIG['all_users_favourites_books']}
@@ -356,7 +360,7 @@ class Database:
             self.conn.commit()
 
 
-    def get_id_user_for_delete_favourites_books(self, id_user, name):
+    def get_id_user_for_delete_favourites_books(self, id_user, name, price):
         with self.conn.cursor() as cur:
             select_request = f"""
             SELECT id
@@ -366,7 +370,7 @@ class Database:
 
             cur.execute(select_request)
             result = cur.fetchall()
-            self.delete_favourites_books(id_user=result[0][0], name=name)
+            self.delete_favourites_books(id_user=result[0][0], name=name, price=price)
 
     def get_all_users_book(self, name):
         with self.conn.cursor() as cur:
@@ -396,4 +400,4 @@ class Database:
             return result
 
 DATABASE = Database()
-DATABASE.get_all_top_books()
+DATABASE.create_tables()

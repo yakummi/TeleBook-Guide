@@ -79,7 +79,8 @@ async def next_python(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_python()[0][0])
     info = DATABASE.select_python_id(number)
     likes = DATABASE.get_all_users_book(repr(info[0][0]))
-    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_python)
+    price = ((info[0][2]).replace(r'\xa0', '')).replace(r'\xa', '')
+    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}\n{(price)}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_python)
 
 
 
@@ -88,14 +89,16 @@ async def next_java(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_java()[0][0])
     info = DATABASE.select_java_id(number)
     likes = DATABASE.get_all_users_book(repr(info[0][0]))
-    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_java)
+    price = ((info[0][2]).replace(r'\xa0', '')).replace(r'\xa', '')
+    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}\n{price}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_java)
 
 @dp.callback_query_handler(text=["javascript", "next_book_javascript"])
 async def next_javascript(call: types.CallbackQuery):
     number = random.randint(1, DATABASE.count_strings_javascript()[0][0])
     info = DATABASE.select_javascript_id(number)
     likes = DATABASE.get_all_users_book(repr(info[0][0]))
-    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_javascript)
+    price = ((info[0][2]).replace(r'\xa0', '')).replace(r'\xa', '')
+    await call.message.answer(f"Добавили {likes} раз\n{info[0][0]}\n{price}{hide_link(info[0][1])}", parse_mode='HTML', reply_markup=urlkb_catalog_javascript)
 
 @dp.callback_query_handler(text=['favourites'])
 async def get_all_favourites_books_from_user(call: types.CallbackQuery):
@@ -112,7 +115,7 @@ async def get_all_favourites_books_from_user(call: types.CallbackQuery):
         result_id = cur.fetchall()
 
         select_request2 = f"""
-        SELECT name, image
+        SELECT name, image, price
         FROM {TABLES_NAME_DB_CONFIG['all_users_favourites_books']}
         WHERE id_user = {result_id[0][0]}
         """
@@ -122,7 +125,7 @@ async def get_all_favourites_books_from_user(call: types.CallbackQuery):
 
 
         for book in books:
-            await call.message.answer(f"{book[0]}{hide_link(book[1])}", parse_mode='HTML', reply_markup=urlkb_favourite)
+            await call.message.answer(f"{book[0]}\n{book[2]}{hide_link(book[1])}", parse_mode='HTML', reply_markup=urlkb_favourite)
 
         photo = InputFile(START_MESSAGE['images'][0])
         await bot.send_photo(chat_id=call.message.chat.id, photo=photo)
@@ -145,7 +148,8 @@ async def add_favourite_book(call: types.CallbackQuery):
     photo = (call.message.html_text.split('<a href="')[1]).split('">\u2060')[0]
     text = (call.message.text.split('\n')[1]).split('\u2060')[0]
     user_id = call.from_user.id
-    DATABASE.get_id_user(user_id, text, photo)
+    price = (call.message.text.split('\n')[2]).split('\u2060')[0]
+    DATABASE.get_id_user(user_id, text, photo, price=price)
 
 
 @dp.callback_query_handler(text='delete_favourite')
